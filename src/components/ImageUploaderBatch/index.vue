@@ -1,0 +1,131 @@
+<template>
+  <el-upload
+      ref="ImageUploaderBatch"
+      class="image-uploader-batch"
+      action="action"
+      list-type="picture-card"
+      :limit="limit"
+      :accept="accept"
+      :file-list="fileList"
+      :multiple="true"
+      :on-success="uploadSuccess"
+      :on-remove="handEmit"
+      :on-exceed="handExceed"
+      :http-request="uploadFile">
+    <i class="el-icon-plus"></i>
+  </el-upload>
+</template>
+
+<script>
+  import {uploadFilePlusApi} from "@/api/file";
+
+  export default {
+    name: "ImageUploaderBatch",
+    props: {
+      value: {
+        type: String,
+        default: ""
+      },
+      size: { // 大小限制(MB)
+        type: Number,
+        default: 2
+      },
+      limit: { // 数量限制
+        type: Number,
+        default: 9
+      }
+    },
+    data() {
+      return {
+        accept: ".jpg, .png",
+        fileList: [],
+        hasUpload: false
+      };
+    },
+    watch: {
+      value(val) {
+        if (val && !this.hasUpload) {
+          let list = val.split(',');
+          let baseUrl = process.env.VUE_APP_BASE_API;
+          this.fileList = list.map(item => ({pathUrl: item, url: baseUrl + item}));
+          this.hasUpload = true;
+        }
+        if (!val) this.clearFiles()
+      }
+    },
+    methods: {
+      // 自定义上传
+      uploadFile(param) {
+        const {file} = param;
+        const type = file.name.substring(file.name.lastIndexOf(".") + 1).toLowerCase();
+        const size = file.size / 1024 / 1024;
+        if (!this.accept.includes(type)) {
+          let accept = this.accept.replace(/[.]|[,]/g, "");
+          this.$errorMsg(`上传图片只能是 ${accept} 格式!`);
+          param.onError();
+          return;
+        }
+        if (size > this.size) {
+          this.$errorMsg(`上传图片大小不能超过 ${this.size}MB!`);
+          param.onError();
+          return;
+        }
+        let data = {};
+        data.file = file;
+        uploadFilePlusApi(data)
+          .then(result => {
+            this.hasUpload = true;
+            param.onSuccess(result.data, file);
+          })
+          .catch(() => {
+            param.onError();
+          });
+      },
+      uploadSuccess(path, file) {
+        let uploadFiles = this.$refs['ImageUploaderBatch'].uploadFiles;
+        uploadFiles.some(item => {
+          if (item.uid === file.uid) {
+            item.pathUrl = path;
+            return true
+          }
+        });
+        this.handEmit()
+      },
+      handEmit() {
+        let pathStr = '';
+        this.$refs['ImageUploaderBatch'].uploadFiles
+          .forEach(item => {
+            pathStr = pathStr + `${item.pathUrl},`;
+          });
+        pathStr = pathStr.substr(0, pathStr.length - 1);
+        this.$emit("input", pathStr);
+        this.$parent.$emit('el.form.change')
+      },
+      handExceed() {
+        this.$errorMsg(`至多上传${this.limit}张图片`)
+      },
+      // 清理文件
+      clearFiles() {
+        this.fileList = [];
+        this.hasUpload = false;
+        this.$refs.ImageUploaderBatch.clearFiles();
+      }
+    }
+  };
+</script>
+
+<style lang="scss">
+  .image-uploader-batch {
+    .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .el-upload:hover {
+      border-color: #409eff;
+    }
+  }
+</style>
