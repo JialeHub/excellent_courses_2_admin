@@ -1,48 +1,24 @@
 <template>
   <card ref="Card">
     <div slot="header">
-      <el-input v-model="searchName" placeholder="输入姓名或学号搜索" clearable class="w-200" @keyup.enter.native="getData"/>
+      <el-input v-model="searchName" placeholder="输入文件名搜索" clearable class="w-200 ml-5" @keyup.enter.native="getData"/>
       <el-button type="success" class="el-icon-search ml-5" @click="getData">搜索</el-button>
-      <el-button class="float-right" type="primary" icon="el-icon-plus" @click="add">新增学生</el-button>
+      <el-button class="float-right" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
     </div>
     <el-table :data="formData">
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="简介">
-              <span>{{ props.row.sprofile }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sname" label="姓名"/>
-      <el-table-column label="性别">
+      <el-table-column prop="fname" label="文件名称"/>
+      <el-table-column prop="createTime" label="上传时间"/>
+      <el-table-column prop="fsize" label="文件大小"/>
+      <el-table-column prop="fsection" label="所属章节"/>
+      <el-table-column label="文件">
         <template slot-scope="scope">
-          <span v-if="scope.row.ssex">男</span>
-          <span v-else>女</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="头像">
-        <template slot-scope="scope">
-          <el-avatar
-              shape="square"
-              :size="44"
-              :src="$baseApi + scope.row.scover">
-            <img src="../../../assets/notFound.png" alt="logo"/>
-          </el-avatar>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sclass" label="班级"/>
-      <el-table-column prop="snumber" label="学号"/>
-      <el-table-column prop="sphone" label="手机号"/>
-      <el-table-column prop="isEnable" label="是否启用" width="90">
-        <template slot-scope="scope">
-          <el-switch v-model="scope.row.isEnable" @change="change(scope.row)" />
+          <span @click="downloadFile(scope.row.faccess)" style="cursor: pointer;color: #1c6ca1">{{scope.row.frename}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="120">
         <template slot-scope="scope">
-          <el-button @click.stop="edit(scope.row)">查看详情</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click.stop="edit(scope.row)"/>
+          <delete-button :ref="scope.row.id" :id="scope.row.id" @start="delData"/>
         </template>
       </el-table-column>
     </el-table>
@@ -53,37 +29,49 @@
 </template>
 
 <script>
-  import {getUserApi, updateUserApi} from '@/api/user';
-  import {isEmpty, objectEvaluate} from "@/utils/common";
-  import Add from '../videos_add/index';
-  import Edit from '../videos_edit/index';
+  import {objectEvaluate} from "@/utils/common";
+  import Add from '../courseware_add/index';
+  import Edit from '../courseware_edit/index';
+  import {delResourceApi, getResourceApi} from "@/api/resource";
 
   export default {
-    name: "StudentsList",
+    name: "CoursewareList",
     components: {Add, Edit},
     data() {
       return {
         formData: [],
-        searchName: ''
+        searchName: '',
       }
     },
     mounted() {
       this.getData()
     },
     methods: {
+      downloadFile (faccess){
+        const url = this.$baseApi + faccess
+        console.log(url);
+        if ('download' in document.createElement('a')) {
+          const a = document.createElement('a')
+          a.href = url
+          a.download = ''
+          a.target = '_blank'
+          document.body.appendChild(a)
+          a.click()
+          URL.revokeObjectURL(a.href)
+          document.body.removeChild(a)
+        }
+      },
       getData() {
         let pagination = this.$refs.Pagination;
         let param = {
           current: pagination.current,
           size: pagination.size,
+          name: this.searchName,
+          section: this.searchSection,
+          type: 1
         };
-        if (/^[0-9]+$/.test(this.searchName)){
-          param.number=this.searchName
-        }else if (!isEmpty(this.searchName)){
-          param.name=this.searchName
-        }
         this.$refs.Card.start();
-        getUserApi(param).then(result => {
+        getResourceApi(param).then(result => {
           let response = result.data;
           this.formData = response['records'];
           pagination.total = response.total;
@@ -95,17 +83,20 @@
       },
       edit(obj) {
         let _this = this.$refs.Edit;
+        console.log(obj);
         objectEvaluate(_this.form, obj);
+        console.log(_this.form);
         _this.visible = true
       },
-      change(row) {
-        let param = {
-          uId : row.id,
-          isEnable : row.isEnable
-        };
-        updateUserApi(param).then(() => {
-          this.getData()
-        })
+      delData(id) {
+        delResourceApi({id: id})
+          .then(() => {
+            this.getData();
+            this.$refs[id].close()
+          })
+          .catch(() => {
+            this.$refs[id].stop();
+          })
       }
     }
   }

@@ -10,7 +10,7 @@ module.exports = {
       "children": [
         {
           "title": "学生列表",
-          "name": "videos_list",
+          "name": "students_list",
           "icon": "",
           "cache": false,
           "hidden": false,
@@ -18,7 +18,7 @@ module.exports = {
         },
         {
           "title": "新增学生",
-          "name": "videos_add",
+          "name": "students_add",
           "icon": "",
           "cache": false,
           "hidden": true,
@@ -26,7 +26,7 @@ module.exports = {
         },
         {
           "title": "编辑学生",
-          "name": "videos_edit",
+          "name": "students_edit",
           "icon": "",
           "cache": false,
           "hidden": true,
@@ -62,7 +62,7 @@ module.exports = {
     },
     {
       "title": "教学资源管理",
-      "name": "students",
+      "name": "resource",
       "icon": "file",
       "cache": false,
       "hidden": false,

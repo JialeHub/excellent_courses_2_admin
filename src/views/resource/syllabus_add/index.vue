@@ -1,46 +1,20 @@
 <template>
   <el-dialog
-      title="新增学生"
-      width="800px"
+      title="新增教育大纲"
+      width="500px"
       @close="cancel"
       :close-on-click-modal="false"
       :visible.sync="visible">
     <el-form :model="form" :rules="rules" ref="Form" label-width="5rem">
-      <row-col>
-        <el-form-item label="姓名" prop="sname">
-          <el-input v-model="form.sname" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="学号" prop="snumber" slot="r">
-          <el-input v-model="form.snumber" placeholder="学号"></el-input>
-        </el-form-item>
-      </row-col>
-      <row-col>
-        <el-form-item label="班级" prop="sclass">
-          <el-input v-model="form.sclass" placeholder="班级"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" prop="sphone" slot="r">
-          <el-input v-model="form.sphone" placeholder="手机号"></el-input>
-        </el-form-item>
-      </row-col>
-      <row-col>
-        <el-form-item label="性别">
-          <el-radio-group v-model="form.ssex">
-            <el-radio :label="true">男</el-radio>
-            <el-radio :label="false">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="账号状态" prop="isEnable" slot="r">
-          <el-switch v-model="form.isEnable"/>
-        </el-form-item>
-      </row-col>
-      <row-col>
-        <el-form-item label="头像" prop="header">
-          <image-uploader-plus v-model="form.scover"/>
-        </el-form-item>
-        <el-form-item label="个人介绍" prop="sprofile" slot="r">
-          <el-input type="textarea" v-model="form.sprofile"></el-input>
-        </el-form-item>
-      </row-col>
+      <el-form-item label="名称" prop="fName">
+        <el-input v-model="form.fName" placeholder="教育大纲名称"></el-input>
+      </el-form-item>
+      <el-form-item label="所属章节" prop="fSection">
+        <el-input v-model="form.fSection" placeholder="所属章节"></el-input>
+      </el-form-item>
+      <el-form-item label="文件" prop="file">
+        <file-uploader :value="form.file" @getFile="getFileUrl" ref="fileUploader" />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取 消</el-button>
@@ -50,31 +24,23 @@
 </template>
 
 <script>
-  import {addUserApi} from '@/api/user';
-  import {resetForm} from "@/utils/common";
-  import {validatePhone,validateNumber} from "@/utils/validate";
+  import {formatSeconds, resetForm} from "@/utils/common";
+  import {uploadResourceApi} from "@/api/resource";
 
   export default {
-    name: "StudentsAdd",
+    name: "SyllabusAdd",
     data() {
       return {
         visible: false,
         form: {
-          "sclass": "",
-          "scover": "",
-          "sname": "",
-          "snumber": "",
-          "sphone": "",
-          "sprofile": "",
-          "ssex": true,
-          "isEnable": true,
+          fType: 2,
+          fName: '',
+          fSection: null,
+          file: '',
         },
         rules: {
-          sname: {required: true, message: '请输入学生姓名', trigger: 'blur'},
-          sclass: {required: true, message: '请输入学生所在班级', trigger: 'blur'},
-          snumber: {required: true, validator: validateNumber, trigger: 'blur'},
-          sphone: {required: true, validator: validatePhone, trigger: 'blur'},
-          password: {required: true, message: '请输入密码', trigger: 'blur'}
+          fName: {required: true, message: '请输入视频名称', trigger: 'blur'},
+          fSection: {required: true, message: '请输入章节', trigger: 'blur'},
         }
       }
     },
@@ -84,7 +50,7 @@
           if (!valid) return;
           let data = {...this.form};
           this.$refs.Submit.start();
-          addUserApi(data).then(() => {
+          uploadResourceApi(data).then(() => {
             this.$refs.Submit.stop();
             this.cancel()
             this.$emit('update')
@@ -95,6 +61,12 @@
       },
       cancel() {
         resetForm(this)
+      },
+      getFileUrl(file) {
+        this.form.file = file['accessPath'];
+      },
+      getDuration(t) {
+        this.form.vDuration = formatSeconds(t);
       }
     }
   }

@@ -18,7 +18,7 @@
       <el-table-column prop="sname" label="姓名"/>
       <el-table-column label="性别">
         <template slot-scope="scope">
-          <span v-if="scope.row.ssex">男</span>
+          <span v-if="!scope.row.ssex">男</span>
           <span v-else>女</span>
         </template>
       </el-table-column>

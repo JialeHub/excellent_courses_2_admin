@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import {uploadBazaarPlusApi} from "@/api/file";
+  import {uploadFilePlusApi} from "@/api/file";
 
   export default {
     name: "FileUploader",
@@ -52,7 +52,7 @@
     },
     data() {
       return {
-        accept: ".jpg, .png",
+        accept: ".jpg, .png, .gif",
         isLoading: false,
         url: ""
       };
@@ -94,10 +94,11 @@
         this.isLoading = true;
         let data = {};
         data.file = file;
-        uploadBazaarPlusApi(data)
+        uploadFilePlusApi(data)
           .then(result => {
             this.isLoading = false;
             this.$emit("input", result.data['accessPath']);
+            this.$emit("getFile", result.data);
             this.$parent.$emit('el.form.change');
             this.url = URL.createObjectURL(file);
           })
@@ -108,6 +109,7 @@
       /* 删除文件 */
       deleteFile() {
         this.clearFiles();
+        this.$emit("getFile", "");
         this.$emit("input", '');
         this.$parent.$emit('el.form.change');
       },

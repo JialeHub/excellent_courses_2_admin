@@ -29,16 +29,16 @@
       <row-col>
         <el-form-item label="性别">
           <!--<el-radio-group v-model="form.ssex">
-            <el-radio :label="true">男</el-radio>
-            <el-radio :label="false">女</el-radio>
+            <el-radio :label="false">男</el-radio>
+            <el-radio :label="true">女</el-radio>
           </el-radio-group>-->
-          <span v-if="form.ssex">男</span>
+          <span v-if="!form.ssex">男</span>
           <span v-else>女</span>
         </el-form-item>
         <el-form-item label="是否启用" slot="r">
           <!--<el-radio-group v-model="form.ssex">
-            <el-radio :label="true">男</el-radio>
-            <el-radio :label="false">女</el-radio>
+            <el-radio :label="false">男</el-radio>
+            <el-radio :label="true">女</el-radio>
           </el-radio-group>-->
           <span v-if="form.isEnable">是</span>
           <span v-else>否</span>

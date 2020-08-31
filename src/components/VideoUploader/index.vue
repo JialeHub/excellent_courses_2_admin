@@ -29,11 +29,13 @@
             @click.stop="deleteFile"/>
       </div>
       <video
+          ref="video"
           v-if="url && !isLoading"
           class="upload-video"
           :src="url"
           :style="{width: styleWidth,height:styleHeight}"/>
       <video
+          ref="video"
           v-else-if="value && !isLoading"
           class="upload-video"
           :src="$baseApi + value"
@@ -44,7 +46,7 @@
           :style="{width: styleWidth,lineHeight: styleHeight}"/>
     </el-upload>
     <el-progress
-        v-show="isLoading"
+        v-show="isLoading || durationLoading"
         :percentage="percentage"
         :color="customColor"/>
   </div>
@@ -77,6 +79,7 @@
     data() {
       return {
         isLoading: false,
+        durationLoading: false,
         source: null,
         url: "",
         percentage: 0,
@@ -126,14 +129,24 @@
           return;
         }
         this.isLoading = true;
+        this.durationLoading = true;
         let data = {};
         data.file = file;
         uploadFileMaxPlusApi(data, this.update, this.source)
           .then(result => {
             this.reset();
-            this.$emit("input", result.data);
+            this.$emit("input", result.data['accessPath']);
+            this.$emit("getVideo", result.data);
             this.$parent.$emit('el.form.change');
             this.url = URL.createObjectURL(file);
+            this.percentage = 100
+            setTimeout(()=>{
+              this.$refs.video.oncanplay = ()=> {
+                this.$emit('getDuration',this.$refs.video.duration);
+                this.percentage = 0
+                this.durationLoading = false;
+              }
+            })
           })
           .catch(error => {
             this.reset();
@@ -162,6 +175,7 @@
       },
       // 删除文件
       deleteFile() {
+        this.$emit("getFile", "");
         this.$emit("input", '');
         this.$parent.$emit('el.form.change');
         this.clearFiles()
