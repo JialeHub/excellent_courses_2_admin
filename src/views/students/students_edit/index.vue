@@ -40,7 +40,7 @@
             <el-radio :label="false">男</el-radio>
             <el-radio :label="true">女</el-radio>
           </el-radio-group>-->
-          <span v-if="form.isEnable">是</span>
+          <span v-if="form.enable">是</span>
           <span v-else>否</span>
         </el-form-item>
       </row-col>
@@ -78,9 +78,10 @@
           "sphone": "",
           "sprofile": "",
           "ssex": true,
+
           "sclass": "",
           "snumber": "",
-          "isEnable": true
+          "enable": true
         },
         rules: {
           sname: { message: '请输入学生姓名', trigger: 'blur'},

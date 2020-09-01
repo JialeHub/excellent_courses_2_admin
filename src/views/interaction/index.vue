@@ -6,56 +6,53 @@
       <el-button type="success" class="el-icon-search ml-5" @click="getData">搜索</el-button>
     </div>
     <el-table :data="formData">
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline>
-            <el-form-item label="题目">
-              <div class="htmlBox" v-html="props.row.hwQuestion" style="border: 1px solid rgba(200,200,200,0.5);width: 100%;padding: 10px"></div>
-            </el-form-item>
-          </el-form>
-          <el-form label-position="left" inline>
-            <el-form-item label="答案">
-              <div class="htmlBox" v-html="props.row.hwAnswer" style="border: 1px solid rgba(200,200,200,0.5);width: 100%;padding: 10px"></div>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column prop="" label="姓名" width="120" header-align="center" align="center"/>
-      <el-table-column prop="" label="头像"  header-align="center" align="center"/>
-      <el-table-column prop="" label="发布时间"  header-align="center" align="center"/>
-      <el-table-column prop="" label="评论内容"  header-align="center" align="center"/>
-      <el-table-column label="赞" align="center" width="90">
+      <el-table-column prop="sname" label="姓名" width="100" header-align="center" align="center"/>
+      <el-table-column label="头像" width="120" align="center" header-align="center">
         <template slot-scope="scope">
-
+          <el-avatar shape="square" :size="44" :src="$baseApi + scope.row.scover">
+            <img :src="require('@/assets/notFound.png')" alt="头像"/>
+          </el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="回复" align="center" width="90">
+      <el-table-column prop="createTime" label="发表时间"  header-align="center" align="center" width="150"/>
+      <el-table-column prop="detail" label="评论内容"  header-align="center" align="center"/>
+      <el-table-column label="赞" align="center" width="120">
         <template slot-scope="scope">
-
+          <el-button @click.stop="praiseOpen(scope.row)">赞列表({{scope.row['praiseNum']}})</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" align="center" width="90">
+      <el-table-column label="回复" align="center" width="120">
+        <template slot-scope="scope">
+          <el-button @click.stop="writeBackOpen(scope.row)">回复列表({{scope.row['wbNum']}})</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" align="center" header-align="center" width="90">
         <template slot-scope="scope">
           <delete-button :ref="scope.row.id" :id="scope.row.id" @start="delData" v-if="true"/>
         </template>
       </el-table-column>
     </el-table>
     <pagination ref="Pagination" @update="getData"/>
+    <praise ref="Praise" @update="getData"/>
+    <write-back ref="WriteBack" @update="getData"/>
   </card>
 </template>
 
 <script>
   import {objectEvaluate} from "@/utils/common";
+  import Praise from './interaction_praise_list/index';
+  import WriteBack from './interaction_writeBack_list/index';
   import {delEvaluateApi, getEvaluateApi} from "@/api/evaluate";
 
   export default {
     name: "Interaction",
+    components: { Praise,WriteBack },
     data() {
       return {
         formData: [],
         searchDetail: '',
         searchStudent: '',
-        type: 0
+        type: 1
       }
     },
     mounted() {
@@ -82,13 +79,24 @@
       add() {
         this.$refs.Add.visible = true;
       },
-      edit(obj) {
-        let _this = this.$refs.Edit;
+      praiseOpen(obj) {
+        let _this = this.$refs.Praise;
         objectEvaluate(_this.form, obj);
         _this.visible = true
+        setTimeout(()=>{
+          _this.getData()
+        })
+      },
+      writeBackOpen(obj) {
+        let _this = this.$refs.WriteBack;
+        objectEvaluate(_this.form, obj);
+        _this.visible = true
+        setTimeout(()=>{
+          _this.getData()
+        })
       },
       delData(id) {
-        delEvaluateApi({id: id})
+        delEvaluateApi({evalId: id})
         .then(() => {
           this.getData();
           this.$refs[id].close()

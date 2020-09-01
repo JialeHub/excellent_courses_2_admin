@@ -10,8 +10,3 @@ export const getResourceDownloadsApi = data => axiosG("resource/downloads", data
 export const updateResourceApi = data => axiosP("resource", data); // 修改资源信息
 export const delResourceApi = data => axiosD("resource", data); // 删除资源信息
 export const uploadResourceApi = data => axiosK("resource/upload", data); // 资源上传
-
-
-
-
-

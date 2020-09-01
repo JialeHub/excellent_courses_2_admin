@@ -67,6 +67,7 @@
             section : this.form.fsection,
             sysPath : this.form.fpath,
             fileSize : this.form.fsize,
+            vDuration : this.form.vduration,
           };
           this.$refs.Submit.start();
           updateResourceApi(data).then(() => {
@@ -88,7 +89,7 @@
         this.form.fsize = file['fileSize'];
       },
       getDuration(t) {
-        this.form.vDuration = formatSeconds(t);
+        this.form.vduration = formatSeconds(t);
       }
     }
   }

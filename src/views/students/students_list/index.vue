@@ -36,9 +36,9 @@
       <el-table-column prop="uid" label="学生ID"/>
       <el-table-column prop="snumber" label="学号"/>
       <el-table-column prop="sphone" label="手机号"/>
-      <el-table-column prop="isEnable" label="是否启用" width="90">
+      <el-table-column prop="enable" label="是否启用" width="90">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.isEnable" @change="change(scope.row)" />
+          <el-switch v-model="scope.row.enable" @change="change(scope.row)" />
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="120">
@@ -102,7 +102,7 @@
       change(row) {
         let param = {
           uId : row.id,
-          isEnable : row.isEnable
+          isEnable : row.enable
         };
         updateUserApi(param).then(() => {
           this.getData()

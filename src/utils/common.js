@@ -151,9 +151,10 @@ export const jsonPretty = (json, tab = 2) => {
  * @param {Object} _this 组件this
  * @param {String|Object} key 重置对象的键
  * @param {String|Object } ref 表单的ref
+ * @param {String|boolean } clearValidate 是否重装表单
  * @description 重置表单
  **/
-export const resetForm = (_this, key = null, ref = 'Form') => {
+export const resetForm = (_this, key = null, ref = 'Form' ,clearValidate = true ) => {
   return new Promise(resolve => {
     if (key) Object.assign(_this.$data[key], _this.$options.data()[key])
     else Object.assign(_this.$data, _this.$options.data());
@@ -161,7 +162,7 @@ export const resetForm = (_this, key = null, ref = 'Form') => {
       return resolve()
     }
     _this.$nextTick(() => {
-      _this.$refs[ref].clearValidate();
+      if (clearValidate) _this.$refs[ref].clearValidate();
       resolve()
     })
   })

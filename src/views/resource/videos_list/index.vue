@@ -10,6 +10,7 @@
       <el-table-column prop="findex" label="视频序号"/>
       <el-table-column prop="fname" label="视频名称"/>
       <el-table-column prop="fsection" label="所属章节"/>
+      <el-table-column prop="fsize" label="视频大小"/>
       <el-table-column prop="vduration" label="视频时长"/>
       <el-table-column label="视频预览">
         <template slot-scope="scope">
