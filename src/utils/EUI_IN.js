@@ -9,7 +9,7 @@ import {
   TableColumn, Tag, Scrollbar, Submenu, Dialog, Col, Row, Upload, Popover, Option, Select,
   InputNumber, PageHeader, Image, Cascader, TabPane, Tabs, Radio, Switch, Drawer, Footer,
   RadioGroup, RadioButton, MenuItemGroup, Checkbox, Tree, Progress, Backtop, Icon, DatePicker,
-  Autocomplete
+  Autocomplete, CheckboxGroup
 } from "element-ui";
 
 Vue.component("ElButton", Button);
@@ -55,6 +55,7 @@ Vue.component("ElRadioGroup", RadioGroup);
 Vue.component("ElRadioButton", RadioButton);
 Vue.component("ElMenuItemGroup", MenuItemGroup);
 Vue.component("ElCheckbox", Checkbox);
+Vue.component("ElCheckboxGroup", CheckboxGroup);
 Vue.component("ElTree", Tree);
 Vue.component("ElProgress", Progress);
 Vue.component("ElBacktop", Backtop);
