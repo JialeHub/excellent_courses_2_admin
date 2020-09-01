@@ -6,14 +6,14 @@
       :close-on-click-modal="false"
       :visible.sync="visible">
     <el-form :model="form" :rules="rules" ref="Form" label-width="5rem">
+      <el-form-item label="所属章节" prop="fsection">
+        <el-input-number v-model="form.fsection" :min="0" max="127" label="所属章节"></el-input-number>
+      </el-form-item>
       <el-form-item label="课件名称" prop="fname">
         <el-input v-model="form.fname" placeholder="课件名称"></el-input>
       </el-form-item>
-      <el-form-item label="所属章节" prop="fsection">
-        <el-input v-model="form.fsection" placeholder="所属章节"></el-input>
-      </el-form-item>
-      <el-form-item label="文件" prop="file">
-        <file-uploader :value="form.faccess" @getFile="getFileUrl" ref="fileUploader" />
+      <el-form-item label="文件" prop="faccess">
+        <file-uploader :value="form.faccess" @getFile="getFile" ref="fileUploader" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -41,10 +41,12 @@
           faccess: '',
           frename: '',
           fpath: '',
+          fsize : '',
         },
         rules: {
           fname: {required: true, message: '请输入文件名称', trigger: 'blur'},
           fsection: {required: true, message: '请输入章节', trigger: 'blur'},
+          faccess: {required: true, message: '请上传课件', trigger: 'change'},
         }
       }
     },
@@ -53,13 +55,14 @@
         this.$refs['Form'].validate((valid) => {
           if (!valid) return;
           let data = {
-            faccess: this.form.faccess,
+            accessPath: this.form.faccess,
             id : this.form.id,
             index : this.form.findex,
             name : this.form.fname,
             newName : this.form.frename,
             section : this.form.fsection,
             sysPath : this.form.fpath,
+            fileSize : this.form.fsize,
           };
           this.$refs.Submit.start();
           updateResourceApi(data).then(() => {
@@ -74,10 +77,11 @@
       cancel() {
         resetForm(this)
       },
-      getFileUrl(file) {
+      getFile(file) {
         this.form.faccess = file['accessPath'];
         this.form.frename = file['newName'];
         this.form.fpath = file['sysPath'];
+        this.form.fsize = file['fileSize'];
       },
       getDuration(t) {
         this.form.vDuration = formatSeconds(t);

@@ -8,7 +8,7 @@
     <el-table :data="formData">
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
+          <el-form label-position="left" inline>
             <el-form-item label="简介">
               <span>{{ props.row.sprofile }}</span>
             </el-form-item>

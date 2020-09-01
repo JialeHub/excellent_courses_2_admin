@@ -63,9 +63,9 @@
         this.$refs.Add.visible = true;
       },
       changeActive() {
-        this.pagination.current=1;
-        this.pagination.total=0;
-        this.pagination.size=10;
+        this.$refs.Pagination.current=1;
+        this.$refs.Pagination.total=0;
+        this.$refs.Pagination.size=10;
       }
     }
   }

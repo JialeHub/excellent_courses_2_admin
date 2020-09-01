@@ -2,7 +2,7 @@
   <div class="custom-editor" :style="`height: ${height}px`">
     <div :style="`height: ${height}px`" v-show="mode==='edit'&&!pass">
       <el-button type="text" @click="edit" size="default">编辑</el-button>
-      <div v-html="value"></div>
+      <div class="htmlBox" v-html="value"></div>
     </div>
     <textarea :id="`custom-editor-${editorKey}`" v-show="mode==='add'||pass"></textarea>
   </div>
@@ -106,7 +106,7 @@
             data.file = blobInfo.blob();
             uploadFilePlusApi(data)
               .then(result => {
-                let url = process.env.VUE_APP_BASE_API + result.data;
+                let url = process.env.VUE_APP_BASE_API + result.data['accessPath'];
                 success(url)
               })
           },

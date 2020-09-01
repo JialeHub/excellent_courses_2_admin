@@ -175,9 +175,17 @@
       },
       // 删除文件
       deleteFile() {
-        this.$emit("getFile", "");
+        this.$emit("getVideo", {
+          accessPath: '',
+          newName: '',
+          sysPath: '',
+          fileSize: '',
+        });
+        console.log("OK");
         this.$emit("input", '');
+        console.log("OK");
         this.$parent.$emit('el.form.change');
+        console.log("OK");
         this.clearFiles()
       },
       // 清理文件

@@ -1,0 +1,15 @@
+/*富文本容器*/
+.htmlBox {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  max-width: 100%;
+  span,div,p{
+    line-height: 1.35;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+}

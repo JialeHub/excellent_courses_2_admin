@@ -9,14 +9,14 @@
       <el-form-item label="视频序号" prop="fIndex">
         <el-input-number v-model="form.fIndex" :min="0" label="视频序号"></el-input-number>
       </el-form-item>
+      <el-form-item label="所属章节" prop="fSection">
+        <el-input-number v-model="form.fSection" :min="0" :max="127" label="所属章节"></el-input-number>
+      </el-form-item>
       <el-form-item label="视频名称" prop="fName">
         <el-input v-model="form.fName" placeholder="视频名称"></el-input>
       </el-form-item>
-      <el-form-item label="所属章节" prop="fSection">
-        <el-input v-model="form.fSection" placeholder="所属章节"></el-input>
-      </el-form-item>
-      <el-form-item label="视频" prop="file">
-        <video-uploader ref="videoUploader" :videoUrl="form.file" @getVideo="getVideoUrl" :width="200" :height="150"
+      <el-form-item label="视频" prop="accessPath">
+        <video-uploader ref="videoUploader" :videoUrl="form.accessPath" @getVideo="getVideo" :width="200" :height="150"
                         @getDuration="getDuration"/>
       </el-form-item>
     </el-form>
@@ -41,14 +41,17 @@
           fName: '',
           fIndex: null,
           fSection: null,
-          file: '',
+          fileSize : '',
+          accessPath: '',
+          newName: '',
+          sysPath : '',
           vDuration: '', //时间
         },
         rules: {
           fName: {required: true, message: '请输入视频名称', trigger: 'blur'},
           fIndex: {required: true, message: '请输入视频序号', trigger: 'blur'},
           fSection: {required: true, message: '请输入章节', trigger: 'blur'},
-          file: {required: true, message: '请上传文件', trigger: 'change'},
+          accessPath: {required: true, message: '请上传视频', trigger: 'change'},
         }
       }
     },
@@ -70,8 +73,11 @@
       cancel() {
         resetForm(this)
       },
-      getVideoUrl(file) {
-        this.form.file = file['accessPath'];
+      getVideo(file) {
+        this.form.accessPath = file['accessPath'];
+        this.form.newName = file['newName'];
+        this.form.sysPath = file['sysPath'];
+        this.form.fileSize = file['fileSize'];
       },
       getDuration(t) {
         this.form.vDuration = formatSeconds(t);

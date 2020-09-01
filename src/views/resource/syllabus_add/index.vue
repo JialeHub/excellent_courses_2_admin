@@ -1,19 +1,19 @@
 <template>
   <el-dialog
-      title="新增教育大纲"
+      title="新增教学大纲"
       width="500px"
       @close="cancel"
       :close-on-click-modal="false"
       :visible.sync="visible">
     <el-form :model="form" :rules="rules" ref="Form" label-width="5rem">
-      <el-form-item label="名称" prop="fName">
-        <el-input v-model="form.fName" placeholder="教育大纲名称"></el-input>
-      </el-form-item>
       <el-form-item label="所属章节" prop="fSection">
-        <el-input v-model="form.fSection" placeholder="所属章节"></el-input>
+        <el-input-number v-model="form.fSection" :min="0" :max="127" label="所属章节"></el-input-number>
       </el-form-item>
-      <el-form-item label="文件" prop="file">
-        <file-uploader :value="form.file" @getFile="getFileUrl" ref="fileUploader" />
+      <el-form-item label="名称" prop="fName">
+        <el-input v-model="form.fName" placeholder="教学大纲名称"></el-input>
+      </el-form-item>
+      <el-form-item label="文件" prop="accessPath">
+        <file-uploader :value="form.accessPath" @getFile="getFile" ref="fileUploader" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -36,11 +36,15 @@
           fType: 2,
           fName: '',
           fSection: null,
-          file: '',
+          fileSize : '',
+          accessPath: '',
+          newName: '',
+          sysPath : '',
         },
         rules: {
           fName: {required: true, message: '请输入视频名称', trigger: 'blur'},
           fSection: {required: true, message: '请输入章节', trigger: 'blur'},
+          accessPath: {required: true, message: '请上传文件', trigger: 'change'},
         }
       }
     },
@@ -62,8 +66,11 @@
       cancel() {
         resetForm(this)
       },
-      getFileUrl(file) {
-        this.form.file = file['accessPath'];
+      getFile(file) {
+        this.form.accessPath = file['accessPath'];
+        this.form.newName = file['newName'];
+        this.form.sysPath = file['sysPath'];
+        this.form.fileSize = file['fileSize'];
       },
       getDuration(t) {
         this.form.vDuration = formatSeconds(t);

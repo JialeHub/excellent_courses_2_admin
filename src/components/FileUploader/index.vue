@@ -109,7 +109,12 @@
       /* 删除文件 */
       deleteFile() {
         this.clearFiles();
-        this.$emit("getFile", "");
+        this.$emit("getFile", {
+          accessPath: '',
+          newName: '',
+          sysPath: '',
+          fileSize: '',
+        });
         this.$emit("input", '');
         this.$parent.$emit('el.form.change');
       },

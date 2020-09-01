@@ -11,9 +11,9 @@
       <el-table-column prop="fname" label="视频名称"/>
       <el-table-column prop="fsection" label="所属章节"/>
       <el-table-column prop="vduration" label="视频时长"/>
-      <el-table-column label="视频">
+      <el-table-column label="视频预览">
         <template slot-scope="scope">
-          <video :src="$baseApi + (scope.row.faccess)" width="100" height="75"></video>
+          <video style="cursor: pointer" :src="$baseApi + (scope.row.faccess)" width="100" height="75" @click="openVideo($baseApi + (scope.row.faccess))"></video>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="120">
@@ -24,6 +24,9 @@
       </el-table-column>
     </el-table>
     <pagination ref="Pagination" @update="getData"/>
+    <el-dialog title="视频预览" width="800px" :close-on-click-modal="false" :visible.sync="visibleVideo" @close="closeVideo">
+      <video :src="videoUrl" width="100%" controls></video>
+    </el-dialog>
     <add ref="Add" @update="getData"/>
     <edit ref="Edit" @update="getData"/>
   </card>
@@ -42,13 +45,23 @@
       return {
         formData: [],
         searchName: '',
-        searchSection: ''
+        searchSection: '',
+        videoUrl: '',
+        visibleVideo: false
       }
     },
     mounted() {
       this.getData()
     },
     methods: {
+      closeVideo(){
+        this.videoUrl = '';
+        this.visibleVideo = false
+      },
+      openVideo(url){
+        this.videoUrl = url;
+        this.visibleVideo = true
+      },
       getData() {
         let pagination = this.$refs.Pagination;
         let param = {

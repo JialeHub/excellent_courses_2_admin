@@ -94,6 +94,10 @@
       size: { // 大小限制(MB)
         type: Number,
         default: 2
+      },
+      fixed: { // 是否开启截图框宽高固定比例
+        type: Boolean,
+        default: true
       }
     },
     data() {
@@ -109,7 +113,7 @@
           outputType: 'png', // 裁剪生成图片的格式 jpeg、png、webp
           canScale: false, // 图片是否允许滚轮缩放
           fixedBox: false, // 固定截图框大小 不允许改变
-          fixed: true, // 是否开启截图框宽高固定比例
+          fixed: this.fixed, // 是否开启截图框宽高固定比例
           fixedNumber: [this.width, this.height], // 截图框的宽高比例
           autoCrop: true, // 是否默认生成截图框
           full: false, // 是否输出原图比例的截图

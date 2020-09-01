@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-      title="新增视频"
+      title="编辑视频"
       width="500px"
       @close="cancel"
       :close-on-click-modal="false"
@@ -9,14 +9,14 @@
       <el-form-item label="视频序号" prop="findex">
         <el-input-number v-model="form.findex" :min="0" label="视频序号"></el-input-number>
       </el-form-item>
+      <el-form-item label="所属章节" prop="fsection">
+        <el-input-number v-model="form.fsection" :min="0" :max="127" label="所属章节"></el-input-number>
+      </el-form-item>
       <el-form-item label="视频名称" prop="fname">
         <el-input v-model="form.fname" placeholder="视频名称"></el-input>
       </el-form-item>
-      <el-form-item label="所属章节" prop="fsection">
-        <el-input v-model="form.fsection" placeholder="所属章节"></el-input>
-      </el-form-item>
-      <el-form-item label="视频" prop="file">
-        <video-uploader ref="videoUploader" :videoUrl="form.faccess" @getVideo="getVideoUrl" :width="200" :height="150" @getDuration="getDuration"/>
+      <el-form-item label="视频" prop="faccess">
+        <video-uploader ref="videoUploader" :value="form.faccess" @getVideo="getVideo" :width="200" :height="150" @getDuration="getDuration"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -44,11 +44,13 @@
           faccess: '',
           frename: '',
           fpath: '',
+          fsize : '',
         },
         rules: {
           fname: {required: true, message: '请输入视频名称', trigger: 'blur'},
           findex: {required: true, message: '请输入视频序号', trigger: 'blur'},
           fsection: {required: true, message: '请输入章节', trigger: 'blur'},
+          faccess: {required: true, message: '请上传视频', trigger: 'change'},
         }
       }
     },
@@ -57,13 +59,14 @@
         this.$refs['Form'].validate((valid) => {
           if (!valid) return;
           let data = {
-            faccess: this.form.faccess,
+            accessPath: this.form.faccess,
             id : this.form.id,
             index : this.form.findex,
             name : this.form.fname,
             newName : this.form.frename,
             section : this.form.fsection,
             sysPath : this.form.fpath,
+            fileSize : this.form.fsize,
           };
           this.$refs.Submit.start();
           updateResourceApi(data).then(() => {
@@ -78,10 +81,11 @@
       cancel() {
         resetForm(this)
       },
-      getVideoUrl(file) {
+      getVideo(file) {
         this.form.faccess = file['accessPath'];
         this.form.frename = file['newName'];
         this.form.fpath = file['sysPath'];
+        this.form.fsize = file['fileSize'];
       },
       getDuration(t) {
         this.form.vDuration = formatSeconds(t);
