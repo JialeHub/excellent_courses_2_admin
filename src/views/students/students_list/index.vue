@@ -33,6 +33,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="sclass" label="班级"/>
+      <el-table-column prop="uid" label="学生ID"/>
       <el-table-column prop="snumber" label="学号"/>
       <el-table-column prop="sphone" label="手机号"/>
       <el-table-column prop="isEnable" label="是否启用" width="90">
