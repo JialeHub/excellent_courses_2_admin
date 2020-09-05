@@ -2,11 +2,7 @@
   <card ref="Card">
     <div slot="header">
       <el-tabs v-model="activeName" @tab-click="changeActive" >
-        <el-tab-pane label="第一章" name="1"></el-tab-pane>
-        <el-tab-pane label="第二章" name="2"></el-tab-pane>
-        <el-tab-pane label="第三章" name="3"></el-tab-pane>
-        <el-tab-pane label="第四章" name="4"></el-tab-pane>
-        <el-tab-pane label="第五章" name="5"></el-tab-pane>
+        <el-tab-pane :label="`第${item+1}章`" :name="item+1" v-for="(item,index) in sections"></el-tab-pane>
       </el-tabs>
       <el-input v-model="searchName" placeholder="输入题目搜索" clearable class="w-200" @keyup.enter.native="getData"/>
       <el-button type="success" class="el-icon-search ml-5" @click="getData">搜索</el-button>
@@ -72,7 +68,7 @@
   import {objectEvaluate} from "@/utils/common";
   import Edit from '../choice_edit/index';
   import Add from '../choice_add/index';
-  import {delChoiceApi, getChoiceApi} from "@/api/examination";
+  import {delChoiceApi, getChoiceApi, getChoiceSectionApi} from "@/api/examination";
 
   export default {
     name: "ChoiceList",
@@ -81,11 +77,15 @@
       return {
         formData: [],
         searchName: '',
-        activeName: '1',
+        activeName: '',
+        sections: [],
       }
     },
     mounted() {
-      this.getData()
+      this.getSection().then(() => {
+        this.activeName=this.sections[0] + 1
+        this.getData()
+      })
     },
     methods: {
       getData() {
@@ -102,6 +102,14 @@
           this.formData = response['records'];
           pagination.total = response.total;
           this.$refs.Card.stop();
+        })
+      },
+      getSection() {
+        return new Promise((resolve)=>{
+          getChoiceSectionApi({}).then(result => {
+            this.sections=result.data;
+            resolve()
+          })
         })
       },
       add() {

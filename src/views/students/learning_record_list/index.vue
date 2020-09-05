@@ -41,6 +41,9 @@
       }
     },
     mounted() {
+      if (!isEmpty(this.$route.query.uid) ){
+        this.searchUId = this.$route.query.uid
+      }
       this.getData()
     },
     methods: {

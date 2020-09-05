@@ -36,14 +36,16 @@
       <el-table-column prop="uid" label="学生ID"/>
       <el-table-column prop="snumber" label="学号"/>
       <el-table-column prop="sphone" label="手机号"/>
-      <el-table-column prop="enable" label="是否启用" width="90">
+      <el-table-column prop="isEnable" label="是否启用" width="90">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.enable" @change="change(scope.row)" />
+          <el-switch v-model="scope.row.isEnable" @change="change(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" align="center" width="120">
+      <el-table-column label="操作" align="center"  header-align="center" width="120">
         <template slot-scope="scope">
-          <el-button @click.stop="edit(scope.row)">查看详情</el-button>
+            <el-button @click.stop="edit(scope.row)">查看详情</el-button>
+            <el-button @click.stop="record(scope.row)" style="margin-left: 0;">学习记录</el-button>
+            <el-button @click.stop="progress(scope.row)" style="margin-left: 0;">观看进度</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,10 +101,16 @@
         objectEvaluate(_this.form, obj);
         _this.visible = true
       },
+      record(obj) {
+        this.$router.push({path:"/students/learning_record_list?uid="+obj.uid})
+      },
+      progress(obj) {
+        this.$router.push({path:"/students/watch_progress_list?uid="+obj.uid})
+      },
       change(row) {
         let param = {
-          uId : row.id,
-          isEnable : row.enable
+          uId : row.uid,
+          isEnable : row.isEnable
         };
         updateUserApi(param).then(() => {
           this.getData()

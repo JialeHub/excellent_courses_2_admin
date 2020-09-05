@@ -30,6 +30,7 @@
 
 <script>
   import {getUserFulfillApi, getUserUndoneApi} from '@/api/user';
+  import {isEmpty} from "@/utils/common";
 
   export default {
     name: "WatchProgressList",
@@ -43,6 +44,9 @@
       }
     },
     mounted() {
+      if (!isEmpty(this.$route.query.uid) ){
+        this.searchUId = this.$route.query.uid
+      }
       this.getData()
     },
     methods: {
