@@ -330,12 +330,30 @@ module.exports = {
       ]
     },
     {
-      "title": "网站图片管理",
-      "name": "images",
-      "icon": "images",
+      "title": "网站管理",
+      "name": "website",
+      "icon": "website2",
       "cache": false,
       "hidden": false,
       "iframe": false,
+      "children": [
+        {
+          "title": "图片管理",
+          "name": "images",
+          "icon": "",
+          "cache": false,
+          "hidden": false,
+          "iframe": false,
+        },
+        {
+          "title": "简介信息",
+          "name": "intro",
+          "icon": "",
+          "cache": false,
+          "hidden": false,
+          "iframe": false,
+        },
+      ]
     }
   ]
 }
