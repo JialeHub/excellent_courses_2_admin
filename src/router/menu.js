@@ -353,6 +353,14 @@ module.exports = {
           "hidden": false,
           "iframe": false,
         },
+        {
+          "title": "教学团队",
+          "name": "team",
+          "icon": "",
+          "cache": false,
+          "hidden": false,
+          "iframe": false,
+        },
       ]
     }
   ]
