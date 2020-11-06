@@ -13,7 +13,7 @@
           <img :src="$baseApi + (scope.row.picture)" alt="" height="100px">
         </template>
       </el-table-column>
-      <el-table-column label="文件">
+      <el-table-column label="文件" v-if="false">
         <template slot-scope="scope">
           <span @click="downloadFile(scope.row.pdf)" style="cursor: pointer;color: #1c6ca1">{{scope.row.pdf}}</span>
         </template>

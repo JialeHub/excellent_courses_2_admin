@@ -15,7 +15,7 @@
       <el-form-item label="照片" prop="picture">
         <image-uploader-plus v-model="form.picture" :fixed="false"/>
       </el-form-item>
-      <el-form-item label="文件" prop="pdf">
+      <el-form-item label="文件" prop="pdf" v-if="false">
         <file-uploader :value="form.pdf" @getFile="getFile" ref="fileUploader" />
       </el-form-item>
     </el-form>
