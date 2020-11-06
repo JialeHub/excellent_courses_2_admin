@@ -13,7 +13,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="getData(1)">刷 新</el-button>
+        <el-button @click="getData(1)" >刷 新</el-button>
         <submit-button ref="Submit1" @submit="submit(1)" />
       </div>
     </card>
@@ -58,8 +58,8 @@
           text: '',
         },
         rules:{
-          text: {required: true, message: '请输入题号', trigger: 'blur'},
-          img: {required: true, message: '请输入题型', trigger: 'change'},
+          text: {required: true, message: '请输入内容', trigger: 'blur'},
+          img: {required: true, message: '请上传图片', trigger: 'change'},
         }
       }
     },
@@ -91,7 +91,7 @@
           this.$refs['Submit'+intIndex].start();
           uploadIntroApi(data).then(() => {
             this.$refs['Submit'+intIndex].stop();
-            this.getData()
+            this.getData(intIndex)
           }).catch(() => {
             this.$refs['Submit'+intIndex].stop();
           })
